@@ -2,21 +2,25 @@ name: Organization Commit Message Lint
 
 on:
   workflow_call:
-    inputs:
-      config-path:
-        required: false
-        type: string
-        default: ".github/commitlintrc.json"
 
 
 jobs:
   commitlint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+
+      - name: Checkout Caller Repository Code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+
+      - name: Checkout .github Config Repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/.github
+          ref: main
+          path: config_repo
 
       - name: Install Node.js
         uses: actions/setup-node@v4
@@ -24,15 +28,26 @@ jobs:
           node-version: 20
 
       - name: Install commitlint
-        run: |
-          npm install --save-dev @commitlint/{config-conventional,cli}
+        run: npm install -g @commitlint/cli @commitlint/config-conventional
+
 
       - name: Run commitlint
         run: |
+          CONFIG_FILE="config_repo/.commitlintrc.json"
+
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             echo "PR detected, checking commits from base to HEAD"
-            npx commitlint --config ${{ inputs.config-path }} --from=${{ github.event.pull_request.base.sha }} --to=${{ github.sha }}
+            commitlint --config $CONFIG_FILE \
+                       --from=${{ github.event.pull_request.base.sha }} \
+                       --to=${{ github.sha }}
+
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            echo "Push detected, checking all commits in the range"
+            commitlint --config $CONFIG_FILE \
+                       --from=${{ github.event.before }} \
+                       --to=${{ github.sha }}
+
           else
-            echo "Push detected, checking last commit"
-            npx commitlint --config ${{ inputs.config-path }} --from=HEAD~1 --to=HEAD
+            echo "Event ${{ github.event_name }} is not supported for commitlint range check."
+            exit 1
           fi
