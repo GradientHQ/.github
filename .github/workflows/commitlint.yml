@@ -35,4 +35,4 @@ jobs:
           else
             echo "Push detected, checking last commit"
             npx commitlint --config ${{ inputs.config-path }} --from=HEAD~1 --to=HEAD
-
+          fi
