@@ -33,7 +33,7 @@ jobs:
 
       - name: Run commitlint
         run: |
-          CONFIG_FILE="config_repo/.commitlintrc.json"
+          CONFIG_FILE="config_repo/.github/.commitlintrc.json"
 
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             echo "PR detected, checking commits from base to HEAD"
