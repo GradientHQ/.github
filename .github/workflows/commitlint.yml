@@ -3,17 +3,10 @@ name: Organization Commit Message Lint
 on:
   workflow_call:
 
-
 jobs:
   commitlint:
     runs-on: ubuntu-latest
     steps:
-
-      - name: Checkout Caller Repository Code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
 
       - name: Checkout .github Config Repository
         uses: actions/checkout@v4
@@ -30,24 +23,21 @@ jobs:
       - name: Install commitlint
         run: npm install -g @commitlint/cli @commitlint/config-conventional
 
+      - name: Validate PR Title
+        if: github.event_name == 'pull_request'
+        run: |
+          CONFIG_FILE="config_repo/.github/.commitlintrc.json"
+          PR_TITLE="${{ github.event.pull_request.title }}"
 
-      - name: Run commitlint
+          echo "Validating PR title: $PR_TITLE"
+          echo "$PR_TITLE" | commitlint --config $CONFIG_FILE
+
+      - name: Validate Push Commits
+        if: github.event_name == 'push'
         run: |
           CONFIG_FILE="config_repo/.github/.commitlintrc.json"
 
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            echo "PR detected, checking commits from base to HEAD"
-            commitlint --config $CONFIG_FILE \
-                       --from=${{ github.event.pull_request.base.sha }} \
-                       --to=${{ github.sha }}
-
-          elif [ "${{ github.event_name }}" = "push" ]; then
-            echo "Push detected, checking all commits in the range"
-            commitlint --config $CONFIG_FILE \
-                       --from=${{ github.event.before }} \
-                       --to=${{ github.sha }}
-
-          else
-            echo "Event ${{ github.event_name }} is not supported for commitlint range check."
-            exit 1
-          fi
+          echo "Push detected, checking commits from ${{ github.event.before }} to ${{ github.sha }}"
+          commitlint --config $CONFIG_FILE \
+                     --from=${{ github.event.before }} \
+                     --to=${{ github.sha }}
