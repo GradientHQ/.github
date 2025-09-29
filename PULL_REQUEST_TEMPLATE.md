@@ -1,10 +1,15 @@
----
-name: Pull Request
-about: Use this template for submitting code changes, fixes, or features.
-title: 'type(scope): concise message (max 50 chars)'
-labels: needs review
-assignees:
----
+## 📋 PR Title Format
+
+The PR title should follow the format:
+
+```
+type(scope): concise message (max 50 chars)
+```
+
+Where:
+- `type` is one of: `feat`, `fix`, `docs`, `refactor`, `perf`, `test`, `chore`.
+- `scope` is optional and describes the part of the codebase affected (e.g., `auth`, `ui`, `api`).
+- `concise message` is a short description of the change (max 50 chars).
 
 ## 📝 Change Type
 
