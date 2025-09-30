@@ -15,13 +15,13 @@ Where:
 
 Please select the type of change this PR introduces (choose one or more):
 
-- [ ] **Feat**: New feature.
-- [ ] **Fix**: Bug fix.
-- [ ] **Docs**: Documentation only changes.
-- [ ] **Refactor**: A code change that neither fixes a bug nor adds a feature.
-- [ ] **Perf**: Performance improvement.
-- [ ] **Test**: Adding missing tests or correcting existing tests.
-- [ ] **Chore**: Maintenance tasks (e.g., updating dependencies).
+- [ ] **feat**: New feature.
+- [ ] **fix**: Bug fix.
+- [ ] **docs**: Documentation only changes.
+- [ ] **refactor**: A code change that neither fixes a bug nor adds a feature.
+- [ ] **perf**: Performance improvement.
+- [ ] **test**: Adding missing tests or correcting existing tests.
+- [ ] **chore**: Maintenance tasks (e.g., updating dependencies).
 
 ## 💡 Description
 
